@@ -19,6 +19,12 @@ class Repo
     #[ORM\Column(length: 255)]
     private ?string $url = null;
 
+    #[ORM\Column]
+    private array $repo_object = [];
+
+    #[ORM\Column(length: 255)]
+    private ?string $fullName = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -44,6 +50,30 @@ class Repo
     public function setUrl(string $url): self
     {
         $this->url = $url;
+
+        return $this;
+    }
+
+    public function getRepoObject(): array
+    {
+        return $this->repo_object;
+    }
+
+    public function setRepoObject(array $repo_object): self
+    {
+        $this->repo_object = $repo_object;
+
+        return $this;
+    }
+
+    public function getFullName(): ?string
+    {
+        return $this->fullName;
+    }
+
+    public function setFullName(string $fullName): self
+    {
+        $this->fullName = $fullName;
 
         return $this;
     }

@@ -2,7 +2,7 @@
 
 namespace App\Command;
 
-use App\Clients\GithubClient;
+use App\Service\GithubService;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -17,7 +17,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 class CreateRepoCommand extends Command
 {
     public function __construct(
-        private GithubClient $client
+        private GithubService $service
     ) {
         parent::__construct();
     }
@@ -32,26 +32,19 @@ class CreateRepoCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
-        $repo = $input->getArgument('repo');
+        $repoName = $input->getArgument('repo');
 
-        if ($repo) {
-            $io->note(sprintf('Trying to create repo: %s', $repo));
+        if ($repoName) {
+            $io->note(sprintf('Trying to create repo: %s', $repoName));
         }
 
-        $response = $this->client->createRepo($repo);
-
-        if (201 == $response->getStatusCode()) {
-            $io->success('You have a new repo! Go create something amazing!');
-            $io->success($response->getContent());
+        try {
+            $repo = $this->service->create($repoName);
+            $io->success('You have a new repo! Go create something amazing! '.$repo->getUrl());
 
             return Command::SUCCESS;
-        } elseif (401 == $response->getStatusCode()) {
-            $io->error('GitHub returned a 401. Is your personal access token set in the .env file?');
-
-            return Command::FAILURE;
-        } else {
-            $io->error('Something went wrong. Hope below helps.');
-            $io->error($response->getContent());
+        } catch (\Exception $exception) {
+            $io->error($e->getMessage());
 
             return Command::FAILURE;
         }
