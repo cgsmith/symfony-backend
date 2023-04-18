@@ -25,3 +25,6 @@ services:
     App\Clients\GithubClient:
         arguments:
             $client: '@github.client'
+
+    App\Command\PhpCsFixerCommand:
+        tags: ['console.command']

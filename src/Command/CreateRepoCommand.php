@@ -9,8 +9,6 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
-use Symfony\Component\HttpClient\HttpClient;
-use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 #[AsCommand(
     name: 'app:create-repo',
@@ -18,7 +16,6 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
 )]
 class CreateRepoCommand extends Command
 {
-
     public function __construct(
         private GithubClient $client
     ) {
@@ -43,21 +40,20 @@ class CreateRepoCommand extends Command
 
         $response = $this->client->createRepo($repo);
 
-        if ($response->getStatusCode() == 201) {
-
+        if (201 == $response->getStatusCode()) {
             $io->success('You have a new repo! Go create something amazing!');
             $io->success($response->getContent());
-            return Command::SUCCESS;
 
-        } elseif ($response->getStatusCode() == 401) {
+            return Command::SUCCESS;
+        } elseif (401 == $response->getStatusCode()) {
             $io->error('GitHub returned a 401. Is your personal access token set in the .env file?');
+
             return Command::FAILURE;
         } else {
             $io->error('Something went wrong. Hope below helps.');
             $io->error($response->getContent());
+
             return Command::FAILURE;
         }
-
-
     }
 }
