@@ -1,0 +1,9 @@
+app_api_repos:
+    path: /api/repos
+    controller: App\Controller\Api\RepoController::index
+    methods: ['GET']
+
+app_api_repo:
+    path: /api/repos/{id}
+    controller: App\Controller\Api\RepoController::show
+    methods: ['GET']

@@ -1,0 +1,1 @@
+{"version":1,"defects":{"App\\Tests\\Service\\GithubServiceTest::testCreate":8,"App\\Tests\\Service\\GithubServiceTest::testCreateSucceed":8},"times":{"App\\Tests\\Service\\GithubServiceTest::testCreate":0.268,"App\\Tests\\Service\\GithubServiceTest::testCreateSucceed":1.384}}

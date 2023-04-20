@@ -21,7 +21,7 @@ class RepoRepository extends ServiceEntityRepository
         parent::__construct($registry, Repo::class);
     }
 
-    public function save(Repo $entity, bool $flush = false): void
+    public function save(Repo $entity, bool $flush = true): void
     {
         $this->getEntityManager()->persist($entity);
 
@@ -30,7 +30,7 @@ class RepoRepository extends ServiceEntityRepository
         }
     }
 
-    public function remove(Repo $entity, bool $flush = false): void
+    public function remove(Repo $entity, bool $flush = true): void
     {
         $this->getEntityManager()->remove($entity);
 
@@ -39,28 +39,13 @@ class RepoRepository extends ServiceEntityRepository
         }
     }
 
-//    /**
-//     * @return Repo[] Returns an array of Repo objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('r')
-//            ->andWhere('r.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('r.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
-
-//    public function findOneBySomeField($value): ?Repo
-//    {
-//        return $this->createQueryBuilder('r')
-//            ->andWhere('r.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
+    public function findOneByFullName($value): ?Repo
+    {
+        return $this->createQueryBuilder('r')
+            ->andWhere('r.fullName = :val')
+            ->setParameter('val', $value)
+            ->getQuery()
+            ->getOneOrNullResult()
+        ;
+    }
 }

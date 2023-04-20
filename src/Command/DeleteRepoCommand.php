@@ -2,6 +2,7 @@
 
 namespace App\Command;
 
+use App\Service\GithubService;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -15,28 +16,36 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 )]
 class DeleteRepoCommand extends Command
 {
+    public function __construct(
+        private GithubService $service
+    ) {
+        parent::__construct();
+    }
+
     protected function configure(): void
     {
         $this
-            ->addArgument('arg1', InputArgument::OPTIONAL, 'Repo path to delete <owner/repo-name>')
-        ;
+            ->addArgument('repo', InputArgument::OPTIONAL, 'Repo path to delete <owner/repo-name>');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
-        $arg1 = $input->getArgument('arg1');
+        $repoFullName = $input->getArgument('repo');
 
-        if ($arg1) {
-            $io->note(sprintf('You passed an argument: %s', $arg1));
+        if ($repoFullName) {
+            $io->note(sprintf('You passed an argument: %s', $repoFullName));
         }
 
-        if ($input->getOption('option1')) {
-            // ...
+        try {
+            $this->service->delete($repoFullName);
+            $io->success('Your repo has been deleted!');
+
+            return Command::SUCCESS;
+        } catch (\Exception $exception) {
+            $io->error($exception->getMessage());
+
+            return Command::FAILURE;
         }
-
-        $io->success('You have a new command! Now make it your own! Pass --help to see your options.');
-
-        return Command::SUCCESS;
     }
 }

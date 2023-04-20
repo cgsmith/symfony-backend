@@ -25,6 +25,9 @@ class Repo
     #[ORM\Column(length: 255)]
     private ?string $fullName = null;
 
+    #[ORM\ManyToOne(inversedBy: 'repos')]
+    private ?User $githubUser = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -74,6 +77,18 @@ class Repo
     public function setFullName(string $fullName): self
     {
         $this->fullName = $fullName;
+
+        return $this;
+    }
+
+    public function getGithubUser(): ?User
+    {
+        return $this->githubUser;
+    }
+
+    public function setGithubUser(?User $githubUser): self
+    {
+        $this->githubUser = $githubUser;
 
         return $this;
     }

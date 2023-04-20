@@ -44,7 +44,7 @@ class CreateRepoCommand extends Command
 
             return Command::SUCCESS;
         } catch (\Exception $exception) {
-            $io->error($e->getMessage());
+            $io->error($exception->getMessage());
 
             return Command::FAILURE;
         }
